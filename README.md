@@ -1,3 +1,7 @@
+# FastAPI Modular Backend
+
+![CI](https://github.com/vishalsinhacodes/fastapi-modular-backend/actions/workflows/ci.yml/badge.svg)
+
 # FastAPI Modular Backend with PostgreSQL, Redis, JWT Auth, Docker & Alembic
 
 A production-ready backend built using **FastAPI**, implemented with clean architecture principles and modern tooling.  
