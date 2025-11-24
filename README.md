@@ -133,6 +133,8 @@ This project can be deployed to:
 -> Kubernetes (using the same Docker images)
 Because configuration is done via environment variables, it follows 12-Factor principles and is cloud-friendly.
 
+## SequenceDiagram
+
 sequenceDiagram
 actor U as User / Client
 participant F as FastAPI API
@@ -158,9 +160,6 @@ participant W as Celery Worker
     F-->>U: {"status": "SUCCESS", "result": "..."}
     deactivate F
 
-```
-
-
 ## 👤 Author
 
 Vishal Sinha
@@ -168,4 +167,3 @@ Backend Engineer | Python Developer
 📧 vishalsinha.codes@gmail.com
 
 ## If you find this project useful, feel free to ⭐ star the repository!
-```
