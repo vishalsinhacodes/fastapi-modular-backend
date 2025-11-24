@@ -51,7 +51,7 @@ jobs:
 
       - name: Set environment variables
         run: |
-          echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5433/productdb" >> $GITHUB_ENV
+          echo "DATABASE_URL=postgresql://postgres:superuser@localhost:5433/productdb" >> $GITHUB_ENV
           echo "REDIS_URL=redis://localhost:6379/0" >> $GITHUB_ENV
           echo "SECRET_KEY=ci-test-secret-key" >> $GITHUB_ENV
           echo "ACCESS_TOKEN_EXPIRE_MINUTES=60" >> $GITHUB_ENV
