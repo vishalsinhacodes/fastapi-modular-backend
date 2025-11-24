@@ -1,0 +1,76 @@
+services:
+  db:
+    image: postgres:15
+    container_name: fastapi_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: superuser
+      POSTGRES_DB: productdb
+    ports:
+      - "5433:5432" # host:container (so you don't clash with local PG on 5432)
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7
+    container_name: fastapi_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+
+  app:
+    build: .
+    container_name: fastapi_app
+    restart: unless-stopped
+    depends_on:
+      - db
+      - redis
+    environment:
+      # override DATABASE_URL for inside the container
+      DATABASE_URL: postgresql://postgres:superuser@db:5432/productdb
+      SECRET_KEY: some-very-secret-key-change-this
+      ACCESS_TOKEN_EXPIRE_MINUTES: 60
+      APP_NAME: "FastAPI Modular App (Docker)"
+      DEBUG: "false"
+      REDIS_URL: redis://redis:6379/0
+    ports:
+      - "8000:8000"
+    # If needed to see live code changes (for dev), you can mount:
+    # volumes:
+    #   - .:/app
+
+  celery_worker:
+    build: .
+    container_name: fastapi_celery_worker
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - db
+    environment:
+      DATABASE_URL: postgresql://postgres:superuser@db:5432/productdb
+      SECRET_KEY: some-very-secret-key-change-this
+      ACCESS_TOKEN_EXPIRE_MINUTES: 60
+      APP_NAME: "FastAPI Modular App (Docker)"
+      DEBUG: "false"
+      REDIS_URL: redis://redis:6379/0
+    command: celery -A app.celery_app.celery_app worker -l info
+
+  celery_beat:
+    build: .
+    container_name: fastapi_celery_beat
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - db
+    environment:
+      DATABASE_URL: postgresql://postgres:superuser@db:5432/productdb
+      SECRET_KEY: some-very-secret-key-change-this
+      ACCESS_TOKEN_EXPIRE_MINUTES: 60
+      APP_NAME: "FastAPI Modular App (Docker)"
+      DEBUG: "false"
+      REDIS_URL: redis://redis:6379/0
+    command: celery -A app.celery_app.celery_app beat -l info
+
+volumes:
+  postgres_data:

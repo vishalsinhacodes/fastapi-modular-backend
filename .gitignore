@@ -1,0 +1,54 @@
+# ----------------------------------------
+# Python
+# ----------------------------------------
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pkl
+*.log
+*.sqlite3
+
+# Virtual environments
+venv/
+.env/
+*.env
+
+# Byte-compiled / cache files
+.pytest_cache/
+.cache/
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# ----------------------------------------
+# FastAPI / Alembic
+# ----------------------------------------
+alembic/versions/*.pyc
+alembic/versions/__pycache__/
+alembic/versions/*.pyc
+
+# ----------------------------------------
+# Docker
+# ----------------------------------------
+# Docker build files
+*.pid
+*.tar
+*.img
+
+# ----------------------------------------
+# PostgreSQL data (local persistent DB)
+postgres_data/
+*.sqlite3
+*.db
+
+# ----------------------------------------
+# OS / Editor files
+# ----------------------------------------
+.DS_Store
+Thumbs.db
+
+# ----------------------------------------
+# VSCode
+# ----------------------------------------
+.vscode/

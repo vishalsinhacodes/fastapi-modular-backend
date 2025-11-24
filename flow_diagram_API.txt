@@ -1,0 +1,32 @@
+CLIENT (Swagger / Frontend / Mobile)
+    │   JSON body + Authorization: Bearer <JWT>
+    ▼
+FASTAPI APP (app.main)
+    │   includes routers
+    ▼
+ROUTER (app.routers.products.create_product)
+    │
+    ├─ Pydantic parses body → ProductCreate
+    ├─ Depends(get_db) → opens SessionLocal() as db
+    └─ Depends(get_current_user)
+          │
+          ├─ oauth2_scheme reads Bearer token
+          ├─ decode_access_token() → user_id
+          └─ db.query(UserModel) → current_user
+    ▼
+SERVICE (app.services.product_service.ProductService.create)
+    │
+    ├─ ProductModel(**payload.model_dump())
+    ├─ db.add(product)
+    ├─ db.commit()
+    ├─ db.refresh(product)
+    └─ Product.model_validate(product)  → Product schema
+    ▼
+FASTAPI RESPONSE HANDLER
+    │
+    ├─ Enforce response_model = Product
+    ├─ Serialize Product → JSON
+    └─ Return HTTP 201/200 + JSON
+    ▼
+CLIENT receives clean JSON
+
