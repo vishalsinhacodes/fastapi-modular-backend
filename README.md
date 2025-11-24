@@ -133,33 +133,32 @@ This project can be deployed to:
 -> Kubernetes (using the same Docker images)
 Because configuration is done via environment variables, it follows 12-Factor principles and is cloud-friendly.
 
-### 🧬 Background Task Flow (FastAPI + Redis + Celery)
-
-```mermaid
 sequenceDiagram
-    actor U as User / Client
-    participant F as FastAPI API
-    participant R as Redis (Broker + Result)
-    participant W as Celery Worker
+actor U as User / Client
+participant F as FastAPI API
+participant R as Redis (Broker + Result)
+participant W as Celery Worker
 
     U->>F: POST /tasks/send-welcome-email
     activate F
     F->>F: Validate user & auth (JWT)
-    F->>R: Enqueue task send_welcome_email(email) via Celery
+    F->>R: Enqueue task send_welcome_email(email)
     F-->>U: 200 OK ({"task_id": "..."})
     deactivate F
 
     activate W
-    W->>R: Fetch task from queue
-    W->>W: Execute send_welcome_email(email)
-    W->>R: Store task result & status
+    W->>R: Fetch job
+    W->>W: Execute send_welcome_email
+    W->>R: Store status + result
     deactivate W
 
     U->>F: GET /tasks/{task_id}
     activate F
-    F->>R: Fetch task status & result
+    F->>R: Query task state
     F-->>U: {"status": "SUCCESS", "result": "..."}
     deactivate F
+
+```
 
 
 ## 👤 Author
